@@ -6,8 +6,9 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
     AIRFLOW__LOGGING__LOGGING_LEVEL: INFO
+    AIRFLOW__WEBSERVER__SECRET_KEY: "secret_key_change_me"
     _PIP_ADDITIONAL_REQUIREMENTS: -r /opt/airflow/requirements.txt
-    
+    PYTHONPATH: /opt/airflow
     PG_HOST: postgres
     PG_PORT: 5432
     PG_DB: airflow
@@ -44,7 +45,8 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    entrypoint: /bin/sh
+    command: -lc "rm -f /opt/airflow/airflow-webserver.pid && exec airflow webserver"
     ports:
       - "8080:8080"
 
