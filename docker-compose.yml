@@ -1,5 +1,3 @@
-version: "3.8"
-
 x-airflow-common: &airflow-common
   image: apache/airflow:2.9.3
   environment:
@@ -8,6 +6,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
     AIRFLOW__LOGGING__LOGGING_LEVEL: INFO
+    _PIP_ADDITIONAL_REQUIREMENTS: -r /opt/airflow/requirements.txt
     
     PG_HOST: postgres
     PG_PORT: 5432
@@ -18,6 +17,7 @@ x-airflow-common: &airflow-common
     - ./dags:/opt/airflow/dags
     - ./src:/opt/airflow/src
     - ./sql:/opt/airflow/sql
+    - ./requirements.txt:/opt/airflow/requirements.txt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     postgres:
